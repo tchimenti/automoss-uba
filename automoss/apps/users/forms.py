@@ -101,6 +101,7 @@ class UserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
+            user.is_verified = True
             user.save()
         return user
 
@@ -114,7 +115,7 @@ class LoginForm(AuthenticationForm):
     error_messages = {
         'invalid_login': 'The course code and password entered were incorrect.',
         'inactive': 'That account is diabled.',
-        'unverified': "Please verify your account. An email has been sent to your inbox."
+        #'unverified': "Please verify your account. An email has been sent to your inbox."
     }
 
     def confirm_login_allowed(self, user):
@@ -123,11 +124,6 @@ class LoginForm(AuthenticationForm):
             raise ValidationError(
                 self.error_messages['inactive'],
                 code='inactive',
-            )
-        if not user.is_verified:
-            raise UnverifiedError(
-                self.error_messages['unverified'],
-                code='unverified',
             )
 
 
