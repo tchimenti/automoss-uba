@@ -12,6 +12,8 @@ RUN apt-get -y update && \
 
 COPY . .
 
+RUN usermod -d /var/lib/mysql mysql
+
     # Start MySQL and set root user authentication method
 RUN service mysql start && \
 mysql mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY ''; FLUSH PRIVILEGES;"  && \
